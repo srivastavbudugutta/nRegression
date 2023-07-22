@@ -8,6 +8,6 @@ The nRegression package was designed to estimate the minimal sample size require
 `install.packages('nRegression')`
 
 ## Install the development version from GitHub: ##
-`devtools::install_github('srivastavbudugutta/DTwrappers')`
+`devtools::install_github('srivastavbudugutta/nRegression')`
 
  
