@@ -15,7 +15,22 @@
 #' @param conf.level The confidence level for the statistical power.
 #' @param verbose Logical. If TRUE, the function will print information about each iteration.
 #' @param vstr Variance inflation factor. Used in the simulation of the response variable.
+#' @return A list containing the following elements:
+#'   \itemize{
+#'      \item{'min.sample.size': The estimated minimum sample size to achieve the desired power.}
+#'      \item{'power': The statistical power achieved with the estimated sample size.}
+#'      \item{'iterations': A data frame with details about each iteration of the simulation. Each row
+#'      represents an iteration and contains the sample size, the estimated power, and the upper and lower
+#'      bounds for the sample size for that iteration.}
+#'  }
+#' @import data.table
+#' @import covr
+#' @import stats
+#'
+#'
 #' @examples
+#'
+#' require(data.table)
 #' power = 0.9
 #' step.age <- "Age ~ N(45, 10)"
 #' step.female <- "Female ~ binary(0.53)"
@@ -28,8 +43,10 @@
 #' step.weight <- "Weight ~ lm(150 - 15 * Female + 0.5 * Age - 0.1 *
 #' Health.Percentile - 0.2 * Exercise.Sessions  + 5 * (Diet == 'Moderate') + 15 *
 #' (Diet == 'Heavy') - 2 * Healthy.Lifestyle + N(0, 10))"
-#' the.steps <- c(step.age, step.female, step.health.percentile, step.exercise.sessions, step.diet, step.healthy.lifestyle, step.weight)
-#' the.formula.logistic <- Healthy.Lifestyle ~ Age + Female + Health.Percentile + Exercise.Sessions + Weight
+#' the.steps <- c(step.age, step.female, step.health.percentile, step.exercise.sessions,
+#'  step.diet, step.healthy.lifestyle, step.weight)
+#' the.formula.logistic <- Healthy.Lifestyle ~ Age + Female + Health.Percentile +
+#'  Exercise.Sessions + Weight
 #' the.variable = "Exercise.Sessions"
 #' conf.level = 0.95
 #' model.type = "logistic"
@@ -45,17 +62,8 @@
 #'  the.formula = the.formula.logistic, the.variable = the.variable, seed = seed,
 #'   n.start = n.start, n.min = n.min, n.max = n.max, increment = increment,
 #'    stop.threshold = stop.threshold, power = power, model.type = model.type,
-#'     verbose = T)
-#'
-#' @return A list containing the following elements:
-#'   \itemize{
-#'      \item{'min.sample.size': The estimated minimum sample size to achieve the desired power.}
-#'      \item{'power': The statistical power achieved with the estimated sample size.}
-#'      \item{'iterations': A data frame with details about each iteration of the simulation. Each row
-#'      represents an iteration and contains the sample size, the estimated power, and the upper and lower
-#'      bounds for the sample size for that iteration.}
-#'  }
-#' @import data.table
+#'     verbose = TRUE)
+
 #' @export
 #'
 

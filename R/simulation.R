@@ -15,6 +15,7 @@
 #' @param lm.p.name A character value specifying the column of the.coefs that contains the p-values for the tests of the estimated coefficients of the linear regression model.
 
 #' @param f.p.name A character value specifying the column of summary.stats that contains the p-value for the linear regression model's F test.
+#' @import data.table
 
 #' @return Returns a list with four elements:
 #' 1. 'lm.estimate.summary': A data.table that provides a summary of the estimates of the coefficients for each variable in the linear model. The summary includes several descriptive statistics such as the mean, standard error, and various quantiles as specified by the 'the.quantiles' argument.
@@ -24,7 +25,7 @@
 
 analyze.simstudy.lm <- function(the.coefs, summary.stats, conf.level = 0.95, the.quantiles = c(0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975), coef.name = "Coefficient", estimate.name = "Estimate", lm.p.name = "Pr(>|t|)", f.p.name = "f.pvalue"){
 
-  require(data.table)
+
   is.dt.the.coefs <- is.data.table(the.coefs)
   setDT(the.coefs)
 
@@ -76,6 +77,7 @@ analyze.simstudy.lm <- function(the.coefs, summary.stats, conf.level = 0.95, the
 #' @param estimate.name A character value specifying the column of the.coefs that contains the estimated coefficients of the logistic regression model.
 
 #' @param logistic.p.name A character value specifying the column of the.coefs that contains the p-values for the tests of the estimated coefficients of the logistic regression model.
+#' @import data.table
 #' @return Returns a list with three elements:
 #' 1. 'logistic.estimate.summary': A data.table that provides a summary of the estimate of coefficients for each variable in the logistic regression model. The summary includes several descriptive statistics such as the mean, standard error, and various quantiles as specified by the 'the.quantiles' argument.
 #' 2. 'logistic.p.summary': A data.table that shows the proportion of times the null hypothesis was rejected (i.e., p-value is less than 1 - 'conf.level') and not rejected (i.e., p-value is greater than or equal to 1 - 'conf.level') for each variable in the model.
@@ -87,7 +89,7 @@ analyze.simstudy.logistic <- function(the.coefs, summary.stats, conf.level = 0.9
   coef.copy <- copy(the.coefs)
   summary.stats.copy <- copy(summary.stats)
 
-  require(data.table)
+  # require(data.table)
   setDT(coef.copy)
   setDT(summary.stats.copy)
 
@@ -283,6 +285,7 @@ buildsim.binomial <- function(the.formula, the.variable, n, num.experiments = 1)
 #' @param the.variable A character string specifying the name of the variable to be used in the output data frame.
 #' @param n The number of observations to be generated in the output data frame. Each observation consists of num.experiments sets of simulated data.
 #' @param num.experiments The number of repetitions or experiments to be conducted, resulting in multiple sets of simulated data. The default is 1, indicating a single set of simulated data.
+#' @import data.table
 #' @return The function returns a data frame containing the generated data based on the specified linear regression formula. Each row in the data frame represents an observation with the simulated values based on the formula. The column name of the generated data is specified by the the.variable parameter.
 
 
@@ -291,7 +294,7 @@ buildsim.lm <- function(dat, the.formula, the.variable, n, num.experiments = 1){
   is.dt <- is.data.table(dat)
 
   if(is.dt == FALSE){
-    require(data.table)
+    # require(data.table)
     setDT(dat)
   }
 
@@ -348,6 +351,7 @@ buildsim.lm <- function(dat, the.formula, the.variable, n, num.experiments = 1){
 #' @param the.variable A character string specifying the name of the variable to be used in the output data frame.
 #' @param n The number of observations to be generated in the output data frame. Each observation consists of num.experiments sets of simulated data.
 #' @param num.experiments The number of repetitions or experiments to be conducted, resulting in multiple sets of simulated data. The default is 1, indicating a single set of simulated data.
+#' @import data.table
 #' @return The function returns a data frame containing the generated binary outcomes (success or failure) based on the specified logistic regression formula. Each row in the data frame represents an observation with the simulated binary outcome. The column name of the generated data is specified by the the.variable parameter.
 
 buildsim.logistic <- function(dat, the.formula, the.variable, n, num.experiments = 1){
@@ -355,7 +359,7 @@ buildsim.logistic <- function(dat, the.formula, the.variable, n, num.experiments
   is.dt <- is.data.table(dat)
 
   if(is.dt == FALSE){
-    require(data.table)
+    # require(data.table)
     setDT(dat)
   }
 
@@ -560,13 +564,14 @@ buildsim.uniform <- function(the.formula, the.variable, n, num.experiments = 1){
 #' @param num.experiments The number of independent sets of 'n' samples to be generated, effectively multiplying the total number of observations generated by 'n'.
 #' @param step.split A character string specifying the delimiter used to separate the variable and the distribution in the.step. Default is "~".
 #' @param value.split A character string specifying the delimiter used to separate the values in the formula. The default is a comma.
+#' @import data.table
 #'
 #' @return The function returns a data frame or data.table (if dat was provided) containing the simulated data as specified by the input parameters. The column name of the simulated data is the variable provided in the.step.
 
 identify.distribution <- function(dat = NULL, the.step, n, num.experiments, step.split = "~", value.split = ","){
   pieces.step <- trimws(strsplit(x = the.step, split = step.split)[[1]])
 
-  require(data.table)
+  # require(data.table)
 
   the.variable <- pieces.step[1]
   the.formula <- pieces.step[2]
@@ -648,11 +653,12 @@ internal.quantiles.mean.sd <- function(x, the.quantiles, na.rm = T){
 #' @description This internal utility function performs a linear regression analysis on the input data using the provided formula (the.formula). It generates a summary of the model fit, which includes coefficient estimates, sigma, degrees of freedom, residual standard error (RSE), R-squared, adjusted R-squared, F-statistic and its associated degrees of freedom and p-value. These statistics are organized into two tables and returned as a list.
 #' @param the.data A data.table or data.frame containing the data on which the linear regression is performed.
 #' @param the.formula A character string specifying the formula of the linear regression model. This formula will be passed to stats::lm() for the regression analysis.
+#' @import data.table
 #' @return A list containing two data.tables: coef.table containing the coefficients of the model and summary.stats containing various fit statistics of the model.
 
 
 internal.statistics.one.lm <- function(the.data, the.formula){
-  require(data.table)
+  # require(data.table)
   mod <- lm(formula = the.formula, data = the.data)
 
   summary.mod <- summary(mod)
@@ -673,10 +679,11 @@ internal.statistics.one.lm <- function(the.data, the.formula){
 #' @description This internal utility function performs a logistic regression analysis on the input data using the provided formula (the.formula) and returns various statistics related to the regression model.
 #' @param the.data A data.table or data.frame containing the data on which the logistic regression is performed.
 #' @param the.formula The formula representing the logistic regression model.
+#' @import data.table
 #' @return A list containing two data.tables: coef.table containing the coefficients of the model and summary.stats containing various fit statistics of the model.
 
 internal.statistics.one.logistic <- function(the.data, the.formula){
-  require(data.table)
+  # require(data.table)
   mod <- glm(formula = the.formula, family = "binomial", data = the.data)
 
   summary.mod <- summary(mod)
@@ -694,10 +701,11 @@ internal.statistics.one.logistic <- function(the.data, the.formula){
 #' @param x A numeric vector whose quantiles are to be calculated.
 #' @param probs A numeric vector of probabilities at which the quantiles will be calculated.
 #' @param na.rm A logical value indicating whether NA values should be removed before the calculation.
+#' @import data.table
 #' @return A data.table where the column names are the specified probabilities (prefixed with 'q.') and the values are the corresponding quantiles of x.
 
 quantile.dt <- function(x, probs, na.rm = T){
-  require(data.table)
+  # require(data.table)
 
   y <- quantile(x = x, probs = probs, na.rm = na.rm)
 
@@ -708,5 +716,202 @@ quantile.dt <- function(x, probs, na.rm = T){
 }
 
 
+#' @title sim.statistics.lm
+#'
+#' @description This function fits a linear regression model to data grouped by given variables and
+#' returns the regression coefficients and summary statistics for each group.
+#'
+#' @param simdat A data.table or data.frame that holds the data to be used in multivariable
+#' regression models across one or more experiments. The structure is as returned by the function
+#' simitation::simulation.steps().
+#'
+#' @param the.formula A formula object or character string specifying the formula for the
+#' regression model. The formula represents the linear regression model to be fitted to the data.
+#'
+#' @param grouping.variables A character vector of column names from 'simdat' on which to
+#' group the data. The linear regression model will be fit separately for each group defined by
+#' these variables.
+#' @import data.table
+#'
+#' @return A list containing the regression coefficients (the.coefs) and summary statistics
+#' (summary.stats) for each group of data.
+
+sim.statistics.lm <- function(simdat, the.formula, grouping.variables){
+  # require(data.table)
+
+  is.dt <- is.data.table(simdat)
+  if(is.dt == F){
+    setDT(simdat)
+  }
+
+  the.coefs <- simdat[, internal.statistics.one.lm(the.data = .SD, the.formula = the.formula)$coef.table, by = grouping.variables]
+
+  summary.stats <- simdat[, internal.statistics.one.lm(the.data = .SD, the.formula = the.formula)$summary.stats, by = grouping.variables]
+
+  res <- list(the.coefs = the.coefs, summary.stats = summary.stats)
+
+  if(is.dt == F){
+    setDF(simdat)
+  }
+
+  return(res)
+}
 
 
+#' @title sim.statistics.logistic
+#' @description This function fits a logistic regression model to data grouped by given variables and
+#' returns the regression coefficients and summary statistics for each group.
+#'
+#' @param simdat A data.table or data.frame that holds the data to be used in multivariable
+#' logistic regression models across one or more experiments. The structure is as returned by the
+#' function simitation::simulation.steps().
+#'
+#' @param the.formula A formula object or character string specifying the formula for the
+#' logistic regression model. The formula represents the logistic regression model to be fitted to the data.
+#'
+#' @param grouping.variables A character vector of column names from 'simdat' on which to
+#' group the data. The logistic regression model will be fit separately for each group defined by
+#' these variables.
+#' @import data.table
+#'
+#' @return A list containing the regression coefficients (the.coefs) and summary statistics
+#' (summary.stats) for each group of data.
+#'
+
+sim.statistics.logistic <- function(simdat, the.formula, grouping.variables){
+  # require(data.table)
+
+  is.dt <- is.data.table(simdat)
+  if(is.dt == F){
+    setDT(simdat)
+  }
+
+  the.coefs <- simdat[, internal.statistics.one.logistic(the.data = .SD, the.formula = the.formula)$coef.table, by = grouping.variables]
+
+  summary.stats <- simdat[, internal.statistics.one.logistic(the.data = .SD, the.formula = the.formula)$summary.stats, by = grouping.variables]
+
+  res <- list(the.coefs = the.coefs, summary.stats = summary.stats)
+
+  if(is.dt == F){
+    setDF(simdat)
+  }
+
+  return(res)
+}
+
+#' @title simstudy.lm
+#' @description This function is designed to simulate experiments based on a given specification and perform a linear regression analysis on the data. It returns the generated data, statistics, and analysis.
+
+#' @param the.steps  A character vector of variables to simulate.  The variables are simulated in the order specified.  Later variables can be generated to depend on earlier variables.  The possible specifications include:
+#' Normal:  "X ~ N(100, 5)" with the mean and SD.
+
+#' Uniform:  "X ~ U(0, 100)" with the minimum and maximum.
+
+#' Poisson:  "X ~ Poisson(3)" with the mean.
+
+#' Binary:  "X ~ Binary(0.5)" with the probability of success.
+
+#' Binomial:  "X ~ Bin(10, 0.2)" with the number of trials and probability of success.
+
+#' Categorical:  "Diet ~ sample(('Light', 'Moderate', 'Heavy'), (0.2, 0.45, 0.35))" with the values in the first set of parentheses and their respective probabilities in the second.
+
+#' Logistic Regression:  "Healthy.Lifestyle ~ logistic(log(0.45) - 0.1 * (Age -45) + 0.05 * Female + 0.01 * Health.Percentile + 0.5 * Exercise.Sessions - 0.1 * (Diet == 'Moderate') - 0.4 * (Diet == 'Heavy'))"
+
+#' Linear Regression:  "Weight ~ lm(150 - 15 * Female + 0.5 * Age - 0.1 * Health.Percentile - 0.2 * Exercise.Sessions  + 5 * (Diet == 'Moderate') + 15 * (Diet == 'Heavy') - 2 * Healthy.Lifestyle + N(0, 10))".  Note that the error term may be specified symbolically with any of the above distributions.
+
+#' @param n  A numeric value for the number of observations in each experiment.
+
+#' @param num.experiments  A numeric value representing the number of simulated experiments.
+
+#' @param the.formula  A formula object or character value specifying the formula for the regression model.
+
+#' @param conf.level  A numeric value between 0 and 1 representing the confidence level (1 - significance level).
+
+#' @param the.quantiles  A numeric vector of values between 0 and 1.  Summary statistics to analyze the tests will return the specified quantiles.
+
+#' @param experiment.name  A character value providing the name for the column identifying the experiment.
+
+#' @param step.split  A character value that separates the name of the variable to be simulated (left side) from its distribution (right side).  Using the.steps = "X ~ N(0,1)" with step.split = "~" will generate a variable named X from a standard Normal distribution.
+
+#' @param coef.name  A character value specifying the column of the.coefs that contains the names of the input variables of the linear regression model.
+
+#' @param estimate.name  A character value specifying the column of the.coefs that contains the estimated coefficients of the linear regression model.
+
+#' @param lm.p.name  A character value specifying the column of the.coefs that contains the p-values for the tests of the estimated coefficients of the linear regression model.
+
+#' @param f.p.name  A character value specifying the column of summary.stats that contains the p-value for the linear regression model's F test.
+
+#' @param seed  A single numeric value, interpreted as an integer, or NULL.   See help(set.seed).
+
+#' @param vstr  A character string containing a version number, e.g., "1.6.2". The default RNG configuration of the current R version is used if vstr is greater than the current version.  See help(set.seed).
+
+#' @return A list containing the generated data (simdat), the statistics (statistics), the analysis (sim.analysis) and the steps (the.steps).
+
+simstudy.lm <- function(the.steps, n, num.experiments, the.formula, conf.level = 0.95, the.quantiles = c(0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975), experiment.name = "experiment", step.split = "~", coef.name = "Coefficient", estimate.name = "Estimate", lm.p.name = "Pr(>|t|)", f.p.name = "f.pvalue", seed = 41, vstr = 3.6){
+
+  simdat.lm <- simulation.steps(the.steps = the.steps, n = n, num.experiments = num.experiments, experiment.name = experiment.name, step.split = step.split, seed = seed, vstr = vstr)
+
+  statistics.lm <- sim.statistics.lm(simdat = simdat.lm, the.formula = the.formula, grouping.variables = experiment.name)
+
+  sim.analysis <- analyze.simstudy.lm(the.coefs = statistics.lm$the.coefs, summary.stats = statistics.lm$summary.stats, conf.level = conf.level, the.quantiles = the.quantiles, coef.name = coef.name, estimate.name = estimate.name, lm.p.name = lm.p.name, f.p.name = f.p.name)
+
+  return(list(the.steps = the.steps, simdat = simdat.lm, statistics = statistics.lm, sim.analysis = sim.analysis))
+}
+
+
+#' @title simstudy.logistic
+#' @description This function is designed to simulate experiments based on a given specification and perform a logistic regression analysis on the data. It returns the generated data, statistics, and analysis.
+#'
+#' @param the.steps  A character vector of variables to simulate.  The variables are simulated in the order specified.  Later variables can be generated to depend on earlier variables.  The possible specifications include:
+#'  Normal:  "X ~ N(100, 5)" with the mean and SD.
+
+#' Uniform:  "X ~ U(0, 100)" with the minimum and maximum.
+
+#' Poisson:  "X ~ Poisson(3)" with the mean.
+
+#' Binary:  "X ~ Binary(0.5)" with the probability of success.
+
+#' Binomial:  "X ~ Bin(10, 0.2)" with the number of trials and probability of success.
+
+#' Categorical:  "Diet ~ sample(('Light', 'Moderate', 'Heavy'), (0.2, 0.45, 0.35))" with the values in the first set of parentheses and their respective probabilities in the second.
+
+#' Logistic Regression:  "Healthy.Lifestyle ~ logistic(log(0.45) - 0.1 * (Age -45) + 0.05 * Female + 0.01 * Health.Percentile + 0.5 * Exercise.Sessions - 0.1 * (Diet == 'Moderate') - 0.4 * (Diet == 'Heavy'))"
+
+#' Linear Regression:  "Weight ~ lm(150 - 15 * Female + 0.5 * Age - 0.1 * Health.Percentile - 0.2 * Exercise.Sessions  + 5 * (Diet == 'Moderate') + 15 * (Diet == 'Heavy') - 2 * Healthy.Lifestyle + N(0, 10))".  Note that the error term may be specified symbolically with any of the above distributions.
+
+#' @param n  A numeric value for the number of observations in each experiment.
+
+#' @param num.experiments A numeric value representing the number of simulated experiments.
+
+#' @param the.formula  A formula object or character value specifying the formula for the regression model.
+
+#' @param conf.level  A numeric value between 0 and 1 representing the confidence level (1 - significance level).
+
+#' @param the.quantiles  A numeric vector of values between 0 and 1.  Summary statistics to analyze the tests will return the specified quantiles.
+
+#' @param experiment.name  A character value providing the name for the column identifying the experiment.
+
+#' @param step.split  A character value that separates the name of the variable to be simulated (left side) from its distribution (right side).  Using the.steps = "X ~ N(0,1)" with step.split = "~" will generate a variable named X from a standard Normal distribution.
+
+#' @param coef.name  A character value specifying the column of the.coefs that contains the names of the input variables of the linear regression model.
+
+#' @param estimate.name  A character value specifying the column of the.coefs that contains the estimated coefficients of the linear regression model.
+
+#' @param logistic.p.name  A character value specifying the column of the.coefs that contains the p-values for the tests of the estimated coefficients of the logistic regression model.
+
+#' @param seed  A single numeric value, interpreted as an integer, or NULL.   See help(set.seed).
+
+#' @param vstr A character string containing a version number, e.g., "1.6.2". The default RNG configuration of the current R version is used if vstr is greater than the current version.  See help(set.seed).
+
+#' @return A list containing the generated data (simdat), the statistics (statistics), the analysis (sim.analysis) and the steps (the.steps).
+#'
+simstudy.logistic <- function(the.steps, n, num.experiments, the.formula, conf.level = 0.95, the.quantiles = c(0.025, 0.1, 0.25, 0.5, 0.75, 0.9, 0.975), experiment.name = "experiment", step.split = "~", coef.name = "Coefficient", estimate.name = "Estimate", logistic.p.name = "Pr(>|z|)", seed = 39, vstr = 3.6){
+
+  simdat <- simulation.steps(the.steps = the.steps, n = n, num.experiments = num.experiments, experiment.name = experiment.name, step.split = step.split, seed = seed, vstr = vstr)
+
+  statistics <- sim.statistics.logistic(simdat = simdat, the.formula = the.formula, grouping.variables = experiment.name)
+
+  sim.analysis <- analyze.simstudy.logistic(the.coefs = statistics$the.coefs, summary.stats = statistics$summary.stats, conf.level = conf.level, the.quantiles = the.quantiles, coef.name = coef.name, estimate.name = estimate.name, logistic.p.name = logistic.p.name)
+
+  return(list(the.steps = the.steps, simdat = simdat, statistics = statistics, sim.analysis = sim.analysis))
+}

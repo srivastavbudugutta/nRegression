@@ -1,6 +1,5 @@
 Package: nRegression
-Title: Translating Coding Statements using get() and eval() for
-        Improved Run-Time Coding Efficiency
+Title: nRegression
 Version: 0.0.2
 Authors@R: c(
     person("David", "Shilane", , "david.shilane@columbia.edu", c("aut")),
@@ -14,12 +13,20 @@ Description: The nRegression() function  designed to estimate the minimal sample
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-Suggests: knitr, rmarkdown, dplyr, testthat (>= 2.1.0), covr, devtools
-Imports: data.table, covr
+Suggests: 
+    knitr,
+    rmarkdown,
+    dplyr,
+    testthat (>= 3.0.0),
+    devtools
+Imports: 
+    data.table, 
+    covr, 
+    stats
 VignetteBuilder: knitr
 NeedsCompilation: no
 Author: David Shilane [aut],
   Srivastav Budugutta [ctb, cre]
 Maintainer: Srivastav Budugutta <sb4788@columbia.edu>
 Repository: CRAN
-
+Config/testthat/edition: 3
