@@ -5,7 +5,7 @@ Authors@R: c(
     person("David", "Shilane", , "david.shilane@columbia.edu", c("aut")),
     person("Srivastav","Budugutta", , "mb4511@columbia.edu", c("ctb","cre"))
     )
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.0.0)
 Description: The nRegression() function  designed to estimate the minimal sample
             size required to attain a specific statistical power in the context 
             of linear regression and logistic regression models through 
