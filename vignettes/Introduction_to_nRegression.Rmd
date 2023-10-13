@@ -164,7 +164,7 @@ stop.threshold = 1
 
 6) Sample Size Calculation:  We can then use the nRegression method:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.logistic = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.logistic, the.variable = the.variable, seed = seed, n.start = n.start, n.min = n.min, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = TRUE)
 ```
 
@@ -172,7 +172,7 @@ Note that using verbose = TRUE will provide information on the search as it proc
 
 The resulting variable **n.logistic** is an object containing a range of information:
 
-```{r eval = FALSE, echo = TRUE,include=TRUE}
+```{r eval = TRUE, echo = TRUE,include=TRUE}
 names(n.logistic)
 ```
 
@@ -180,25 +180,25 @@ These include:
 
 * The selected sample size:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.logistic$n
 ```
 
 * The empirical power of the selected sample size in the simulation study:
 
-```{r eval = FALSE, echo = TRUE}
+```{r eval = TRUE, echo = TRUE}
 n.logistic$power
 ```
 
 * Information on each iteration of the search:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.logistic$iterations
 ```
 
 * Full information on the simulation study for the selected sample size:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 names(n.logistic$simstudy)
 ```
 
@@ -229,7 +229,7 @@ Also note that we are using a less precise stopping threshold of 10.  This will 
 
 We can then estimate the minimally viable sample size:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.lm = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = TRUE)
 
 n.lm$n
@@ -237,7 +237,7 @@ n.lm$n
 
 We can also see information on the iterations:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.lm$iterations
 ```
 
@@ -249,7 +249,7 @@ You might first consider a smaller-scale calculation to narrow the range of pote
 
 For instance, with the linear regression example, we might first conduct the following smaller-scale calculation:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.lm = nRegression(the.steps = the.steps, num.experiments = 100, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = 50, power = power, model.type = model.type, verbose = FALSE)
 
 n.lm$iterations
@@ -257,7 +257,7 @@ n.lm$iterations
 
 This would indicate to us that the sample size is approximately 860.  To verify, we might consider a more narrow range below and above this value, with a larger number of experiments and a small stopping threshold:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.lm = nRegression(the.steps = the.steps, num.experiments = 500, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 870, n.min = 800, n.max = 1200, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = FALSE)
 
 n.lm$n
@@ -269,7 +269,7 @@ n.lm$iterations
 
 When the established maximum is not sufficiently large, the search algorithm will return a sample size equal to the largest value it considered.  If the previous example for linear regression had been restricted to a smaller range of sample sizes, then we would arrive at the following calculation:
 
-```{r eval = FALSE, echo = TRUE, include=TRUE}
+```{r eval = TRUE, echo = TRUE, include=TRUE}
 n.lm = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = 700, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = TRUE)
 
 n.lm$n

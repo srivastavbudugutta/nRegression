@@ -1,5 +1,0 @@
-"0","step.age <- ""Age ~ N(45, 10)"""
-"0","step.female <- ""Female ~ binary(0.53)"""
-"0","step.health.percentile <- ""Health.Percentile ~ U(0,100)"""
-"0","step.exercise.sessions <- ""Exercise.Sessions ~ Poisson(2)"""
-"0","step.diet <- ""Diet ~ sample(('Light', 'Moderate', 'Heavy'), (0.2, 0.45, 0.35))"""
