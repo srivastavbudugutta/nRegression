@@ -1,0 +1,8 @@
+"0","n.lm = nRegression(the.steps = the.steps, num.experiments = 500, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 870, n.min = 800, n.max = 1200, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = FALSE)"
+"0",""
+"0","n.lm$n"
+"1","[1]"
+"1"," 954"
+"1","
+"
+"0","n.lm$iterations"

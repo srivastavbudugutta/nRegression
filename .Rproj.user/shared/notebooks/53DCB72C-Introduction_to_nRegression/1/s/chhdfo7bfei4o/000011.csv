@@ -1,0 +1,19 @@
+"0","n.logistic = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.logistic, the.variable = the.variable, seed = seed, n.start = n.start, n.min = n.min, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = T)"
+"2","i = 1:  lower = 1, n = 200, upper = 300, estimated statistical power = 1.0000
+"
+"2","i = 2:  lower = 1, n = 101, upper = 200, estimated statistical power = 0.9000
+"
+"2","i = 3:  lower = 1, n = 51, upper = 101, estimated statistical power = 0.7000
+"
+"2","i = 4:  lower = 51, n = 76, upper = 101, estimated statistical power = 0.6000
+"
+"2","i = 5:  lower = 76, n = 89, upper = 101, estimated statistical power = 0.9000
+"
+"2","i = 6:  lower = 76, n = 83, upper = 89, estimated statistical power = 0.6000
+"
+"2","i = 7:  lower = 83, n = 86, upper = 89, estimated statistical power = 1.0000
+"
+"2","i = 8:  lower = 83, n = 85, upper = 86, estimated statistical power = 0.9000
+"
+"2","i = 9:  lower = 83, n = 84, upper = 85, estimated statistical power = 0.8000
+"

@@ -1,0 +1,15 @@
+.GlobalEnv
+package:nRegression
+devtools_shims
+package:testthat
+package:devtools
+package:usethis
+tools:rstudio
+package:stats
+package:graphics
+package:grDevices
+package:utils
+package:datasets
+package:methods
+Autoloads
+package:base

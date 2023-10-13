@@ -1,0 +1,446 @@
+---
+title: "Practice_2"
+author: "Srivastav Budugutta"
+date: "2023-04-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+rm(list = ls())
+library(caTools)
+library(tidyverse)
+library(vtreat)
+library(mice)
+library(xgboost); library(caret)
+library(randomForest)
+library(mgcv)
+library(car)
+library(rpart)
+library(rpart.plot)
+library(ISLR2)
+library(ROCR)
+library(gbm)
+library(ranger)
+library(pROC)
+library(e1071)
+library(gam)
+library(mgcv)
+library(ISLR)
+library(caret)
+library(caTools)
+library(car)
+library(tidyverse)
+library(tidymodels)
+library(ggplot2)
+library(ggthemes)
+library(corrr)
+library(discrim)
+library(poissonreg)
+library(klaR)
+library(pROC)
+library(leaps)
+library(glmnet)
+library(dplyr)
+```
+
+#Q1
+
+```{r}
+
+data = read_csv("data/VERSION2.csv")
+head(data)
+
+
+
+```
+
+
+#Q2
+
+```{r}
+set.seed(617)
+split = sample(1:nrow(data), nrow(data)*0.80)
+train = data[split,]
+test = data[-split,]
+View(train)
+dim(train)
+#640
+
+```
+
+#Q4
+
+```{r}
+class("city")
+
+
+```
+
+
+#Q6
+```{r}
+train %>% filter(beds == 4) %>% count()
+
+#192
+```
+
+#Q8
+
+```{r}
+count_of_sac = train %>% filter(city == "SACRAMENTO") %>% count()
+dim(train)
+(count_of_sac/640)*100
+
+# sacramento_homes <- sum(train$city == "SACRAMENTO")
+# percentage_sacramento <- (sacramento_homes / nrow(train)) * 100
+# percentage_sacramento
+#46.09375
+```
+
+
+#Q10
+```{r}
+
+train %>% filter(sqft>=1000) %>% filter(baths >=2) %>% summarize(median_price = median(price))
+#244750
+
+
+```
+
+
+#Q12
+```{r}
+
+bin1 = train %>% filter(sqft <=1000) %>% count()
+bin2 = train %>% filter(sqft >1000 & sqft <=2000) %>% count()
+bin3 = train %>% filter(sqft >2000 & sqft <=3000) %>% count()
+bin4 = train %>% filter(sqft >3000 & sqft <=4000) %>% count()
+bin5 = train %>% filter(sqft > 4000) %>% count()
+
+bin1
+bin2
+bin3
+bin4
+bin5
+
+#bin2
+```
+
+
+#Q14
+```{r}
+
+train$condition = parse_number(train$condition)
+train %>% group_by(city) %>% filter(city %in% c("ANTELOPE", "CITRUS_HEIGHTS", "ELK_GROVE", "ROSEVILLE","SACRAMENTO")) %>% summarize(mean_rating = mean(condition)) %>% arrange(mean_rating)
+# CITRUS_HEIGHTS
+
+```
+
+
+#Q16
+```{r}
+ggplot(mapping = aes(x=train$sqft, y=train$price))+
+  geom_point(color = "orange")  +
+  geom_smooth(method = "lm", se = F, color = "green")
+
+```
+
+
+#Q18
+```{r}
+model1 = lm(train$price~train$beds, data = train)
+# dim(model1$residuals)
+# head(model1)
+
+summary(model1)
+# option C
+```
+
+
+#Q20
+```{r}
+
+model2 = lm(train$price~train$type, data = train)
+
+
+summary(model2)
+#option B
+
+```
+
+
+#Q22
+```{r}
+#Revisit
+model3 = lm(train$price~beds+baths+sqft+type+latitude+longitude, data = train)
+predict_model_3 = predict(model3)
+sse = sum((predict_model_3-train$price)^2)
+sst = sum((mean(train$price)-train$price)^2)
+r2 = 1 - (sse/sst)
+r2
+summary(model3)
+
+
+```
+
+
+#Q24
+```{r}
+
+summary(model3)
+#beds, baths,sqft, latitude and longitude
+```
+
+
+#Q26
+```{r}
+
+
+#sqft
+
+
+```
+
+
+#Q28
+```{r}
+View(train)
+
+model4 = 
+  gam(price~ s(sqft)+s(latitude)+s(longitude)+beds+baths+type,data = train, method = "REML")
+View(test)
+predict_test = predict(model4, newdata = test)
+length(predict_test)
+summary(model4)
+model4_rmse = sqrt(mean((predict_test-test$price)^2))
+model4_rmse
+
+#88699.78
+
+```
+
+
+#Q30
+
+
+```{r}
+
+model5 = lm(price~ beds+baths+sqft+latitude+longitude,data = train)
+
+vif(model5)
+#sqft
+```
+
+
+#Q32
+
+
+```{r}
+# start_mod = lm(price~1,data=train)
+# empty_mod = lm(price~1,data=train)
+# full_mod = lm(train$price ~ train$beds + train$baths + train$sqft + train$type+
+#               train$latitude + train$longitude,data=train)
+# hybridStepwise = step(start_mod,
+#                       scope=list(upper=full_mod,lower=empty_mod),
+#                       direction='both',
+#                       alpha = 0.1)
+# hybridStepwise$anova
+
+#sqft, longtitude,beds,latitude
+```
+
+#Q34
+
+
+```{r}
+
+
+train$type = factor(train$type)
+
+model6 = rpart(price~ train$beds + train$baths + train$sqft + train$type+
+              train$latitude + train$longitude,data = train)
+summary(model6)
+
+
+#sqft
+
+```
+
+#Q36
+
+
+```{r}
+
+rpart.plot(model6, type  = 4)
+#142,000
+```
+
+#Q38
+
+
+```{r}
+
+rpart.plot(model6, type  = 4)
+#427,000
+
+```
+
+#Q40
+
+
+```{r}
+
+tail(predict(model6, newdata= train),n=1)
+```
+
+
+#Q42
+
+
+```{r}
+
+set.seed(617)
+model7 = gbm(price~beds+baths+sqft+latitude+longitude,
+            data=train,
+            distribution="gaussian",
+            n.trees = 200,
+            interaction.depth = 3,
+            shrinkage = 0.049,
+            n.minobsinnode = 5)
+model_7_predict = predict(model7, newdata = test)
+model_7_rmse = sqrt(mean((model_7_predict - test$price)^2)); model_7_rmse
+```
+
+
+#Q44
+
+
+```{r}
+
+
+set.seed(617)
+model8 = ranger(price~beds+baths+sqft+latitude+longitude,
+                       data = train, 
+                       num.trees = 400)
+model8_predict = predict(model8, data = test)
+
+model8_rmse = sqrt(mean((model8_predict$predictions - test$price)^2)); model8_predict
+
+model3_predict  = predict(model3, newdata = test)
+model3_rmse = sqrt(mean((model3_predict - test$price)^2))
+model3_rmse
+
+model4_predict  = predict(model4, newdata = test)
+model4_rmse = sqrt(mean((model4_predict - test$price)^2))
+model4_rmse
+
+model5_predict  = predict(model5, newdata = test)
+model5_rmse = sqrt(mean((model5_predict - test$price)^2))
+model5_rmse
+
+model6_predict  = predict(model6, newdata = test)
+model6_rmse = sqrt(mean((model6_predict - test$price)^2))
+model6_rmse
+
+model_7_rmse
+model8_rmse
+
+model_names = c("model3","model4","model5","model6","model7","model8")
+rmse_scores = c(model3_rmse,model4_rmse,model5_rmse,model6_rmse,model_7_rmse,model8_rmse)
+scores_rmse = data.frame(model_names,rmse_scores)
+scores_rmse %>% arrange(rmse_scores)
+
+#model 7
+```
+
+#Q46
+
+
+```{r}
+model9 = glm(price_hilo~beds+baths+sqft+type+latitude+longitude,data=train,family='binomial')
+predict(model9,newdata=data.frame(sqft=1000, beds=2, baths=2, latitude=38.5, longitude=-120.5,type="Condo"),type='response') 
+summary(model9)
+
+
+```
+
+
+#Q48
+
+
+```{r}
+summary(model9)$coef[4]
+100*(exp(summary(model9)$coef[4])-1)
+#0.4594693
+
+
+```
+
+#Q50
+
+
+```{r}
+model9$aic
+
+```
+
+
+#Q52
+
+
+```{r}
+model9_predict = predict(model9, newdata = test, type = 'response')
+# model9_predict
+ct = table(price_hilo = test$price_hilo,
+           predictions = as.integer(model9_predict>0.5)); ct
+
+accuracy = sum(ct[1,1],ct[2,2])/nrow(test); accuracy
+
+
+
+```
+
+
+#Q54
+
+
+```{r}
+model9_auc =  roc(test$price_hilo, as.numeric(predict(model9, type="response", newdata = test)>0.5))$auc
+model9_auc
+
+```
+
+
+#Q56
+
+
+```{r}
+model10 = svm(factor(train$price_hilo)~beds+baths+sqft+type+latitude+longitude,data = train, kernel='radial',scale=F,type='C-classification')
+
+pred = predict(model10)
+mean(pred==train$y)
+
+model10_pred = predict(model10,newdata=test)
+pred
+mean(pred==test$price_hilo)
+test$price_hilo = factor(test$price_hilo)
+ct = table(price_hilo = test$price_hilo,
+           predictions = model10_pred); ct
+
+accuracy = sum(ct[1,1],ct[2,2])/nrow(test); accuracy
+
+```
+
+
+#Q58
+
+
+```{r}
+#38
+
+```

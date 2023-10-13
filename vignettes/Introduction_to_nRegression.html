@@ -518,11 +518,11 @@ nRegression function’s inputs.</li>
 model.type = &quot;logistic&quot;
 seed = 41
 vstr = 3.6
-num.experiments = 200
+num.experiments = 10
 
 n.start = 200
 n.min = 1
-n.max = 3000
+n.max = 300
 increment = 100
 stop.threshold = 1</code></pre>
 <ol start="6" style="list-style-type: decimal">
@@ -530,16 +530,15 @@ stop.threshold = 1</code></pre>
 method:</li>
 </ol>
 <pre class="r"><code>n.logistic = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.logistic, the.variable = the.variable, seed = seed, n.start = n.start, n.min = n.min, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = T)
-#&gt; Loading required package: data.table
-#&gt; i = 1:  lower = 1, n = 200, upper = 3000, estimated statistical power = 0.9650
-#&gt; i = 2:  lower = 1, n = 101, upper = 200, estimated statistical power = 0.8400
-#&gt; i = 3:  lower = 101, n = 151, upper = 200, estimated statistical power = 0.9000
-#&gt; i = 4:  lower = 101, n = 126, upper = 151, estimated statistical power = 0.8950
-#&gt; i = 5:  lower = 126, n = 139, upper = 151, estimated statistical power = 0.8800
-#&gt; i = 6:  lower = 139, n = 145, upper = 151, estimated statistical power = 0.9000
-#&gt; i = 7:  lower = 139, n = 142, upper = 145, estimated statistical power = 0.9300
-#&gt; i = 8:  lower = 139, n = 141, upper = 142, estimated statistical power = 0.9300
-#&gt; i = 9:  lower = 139, n = 140, upper = 141, estimated statistical power = 0.8850</code></pre>
+#&gt; i = 1:  lower = 1, n = 200, upper = 300, estimated statistical power = 1.0000
+#&gt; i = 2:  lower = 1, n = 101, upper = 200, estimated statistical power = 0.9000
+#&gt; i = 3:  lower = 1, n = 51, upper = 101, estimated statistical power = 0.7000
+#&gt; i = 4:  lower = 51, n = 76, upper = 101, estimated statistical power = 0.6000
+#&gt; i = 5:  lower = 76, n = 89, upper = 101, estimated statistical power = 0.9000
+#&gt; i = 6:  lower = 76, n = 83, upper = 89, estimated statistical power = 0.6000
+#&gt; i = 7:  lower = 83, n = 86, upper = 89, estimated statistical power = 1.0000
+#&gt; i = 8:  lower = 83, n = 85, upper = 86, estimated statistical power = 0.9000
+#&gt; i = 9:  lower = 83, n = 84, upper = 85, estimated statistical power = 0.8000</code></pre>
 <p>Note that using verbose = T will provide information on the search as
 it proceeds, while verbose = F will suppress this information.</p>
 <p>The resulting variable <strong>n.logistic</strong> is an object
@@ -551,27 +550,27 @@ containing a range of information:</p>
 <li>The selected sample size:</li>
 </ul>
 <pre class="r"><code>n.logistic$n
-#&gt; [1] 141</code></pre>
+#&gt; [1] 85</code></pre>
 <ul>
 <li>The empirical power of the selected sample size in the simulation
 study:</li>
 </ul>
 <pre class="r"><code>n.logistic$power
-#&gt; [1] 0.93</code></pre>
+#&gt; [1] 0.9</code></pre>
 <ul>
 <li>Information on each iteration of the search:</li>
 </ul>
 <pre class="r"><code>n.logistic$iterations
 #&gt;    i lower   n upper power
-#&gt; 1: 1     1 200  3000 0.965
-#&gt; 2: 2     1 101   200 0.840
-#&gt; 3: 3   101 151   200 0.900
-#&gt; 4: 4   101 126   151 0.895
-#&gt; 5: 5   126 139   151 0.880
-#&gt; 6: 6   139 145   151 0.900
-#&gt; 7: 7   139 142   145 0.930
-#&gt; 8: 8   139 141   142 0.930
-#&gt; 9: 9   139 140   141 0.885</code></pre>
+#&gt; 1: 1     1 200   300   1.0
+#&gt; 2: 2     1 101   200   0.9
+#&gt; 3: 3     1  51   101   0.7
+#&gt; 4: 4    51  76   101   0.6
+#&gt; 5: 5    76  89   101   0.9
+#&gt; 6: 6    76  83    89   0.6
+#&gt; 7: 7    83  86    89   1.0
+#&gt; 8: 8    83  85    86   0.9
+#&gt; 9: 9    83  84    85   0.8</code></pre>
 <ul>
 <li>Full information on the simulation study for the selected sample
 size:</li>
@@ -593,11 +592,11 @@ estimate the minimally viable sample size with only modest changes in
 the specifications:</p>
 <pre class="r"><code>the.formula.lm &lt;- Weight ~ Age + Female + Health.Percentile + Exercise.Sessions + Healthy.Lifestyle
 model.type = &quot;lm&quot;
-num.experiments &lt;- 500
+num.experiments &lt;- 10
 
 n.start = 500
-n.max &lt;- 10000
-increment = 500
+n.max &lt;- 800
+increment = 100
 stop.threshold = 10
 
 the.variable = &quot;Healthy.LifestyleTRUE&quot;</code></pre>
@@ -611,30 +610,28 @@ This will reduce the number of iterations before the search procedure
 halts.</p>
 <p>We can then estimate the minimally viable sample size:</p>
 <pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = T)
-#&gt; i = 1:  lower = 1, n = 500, upper = 10000, estimated statistical power = 0.6340
-#&gt; i = 2:  lower = 500, n = 1000, upper = 10000, estimated statistical power = 0.9400
-#&gt; i = 3:  lower = 500, n = 750, upper = 1000, estimated statistical power = 0.8560
-#&gt; i = 4:  lower = 750, n = 875, upper = 1000, estimated statistical power = 0.9120
-#&gt; i = 5:  lower = 750, n = 813, upper = 875, estimated statistical power = 0.8580
-#&gt; i = 6:  lower = 813, n = 844, upper = 875, estimated statistical power = 0.8960
-#&gt; i = 7:  lower = 844, n = 860, upper = 875, estimated statistical power = 0.9040
-#&gt; i = 8:  lower = 844, n = 852, upper = 860, estimated statistical power = 0.8900
-#&gt; i = 9:  lower = 852, n = 856, upper = 860, estimated statistical power = 0.8840
+#&gt; i = 1:  lower = 1, n = 500, upper = 800, estimated statistical power = 0.6000
+#&gt; i = 2:  lower = 500, n = 600, upper = 800, estimated statistical power = 0.3000
+#&gt; i = 3:  lower = 600, n = 700, upper = 800, estimated statistical power = 1.0000
+#&gt; i = 4:  lower = 600, n = 650, upper = 700, estimated statistical power = 0.9000
+#&gt; i = 5:  lower = 600, n = 625, upper = 650, estimated statistical power = 0.7000
+#&gt; i = 6:  lower = 625, n = 638, upper = 650, estimated statistical power = 0.7000
+#&gt; i = 7:  lower = 638, n = 644, upper = 650, estimated statistical power = 0.9000
+#&gt; i = 8:  lower = 638, n = 641, upper = 644, estimated statistical power = 0.8000
 
 n.lm$n
-#&gt; [1] 860</code></pre>
+#&gt; [1] 644</code></pre>
 <p>We can also see information on the iterations:</p>
 <pre class="r"><code>n.lm$iterations
-#&gt;    i lower    n upper power
-#&gt; 1: 1     1  500 10000 0.634
-#&gt; 2: 2   500 1000 10000 0.940
-#&gt; 3: 3   500  750  1000 0.856
-#&gt; 4: 4   750  875  1000 0.912
-#&gt; 5: 5   750  813   875 0.858
-#&gt; 6: 6   813  844   875 0.896
-#&gt; 7: 7   844  860   875 0.904
-#&gt; 8: 8   844  852   860 0.890
-#&gt; 9: 9   852  856   860 0.884</code></pre>
+#&gt;    i lower   n upper power
+#&gt; 1: 1     1 500   800   0.6
+#&gt; 2: 2   500 600   800   0.3
+#&gt; 3: 3   600 700   800   1.0
+#&gt; 4: 4   600 650   700   0.9
+#&gt; 5: 5   600 625   650   0.7
+#&gt; 6: 6   625 638   650   0.7
+#&gt; 7: 7   638 644   650   0.9
+#&gt; 8: 8   638 641   644   0.8</code></pre>
 </div>
 </div>
 <div id="practical-considerations" class="section level2">
@@ -653,37 +650,31 @@ experiments per simulation and a smaller stopping criteria, can be
 conducted.</p>
 <p>For instance, with the linear regression example, we might first
 conduct the following smaller-scale calculation:</p>
-<pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = 100, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = 50, power = power, model.type = model.type, verbose = F)
+<pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = 10, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = 50, power = power, model.type = model.type, verbose = F)
 
 n.lm$iterations
-#&gt;    i lower    n upper power
-#&gt; 1: 1     1  500 10000  0.63
-#&gt; 2: 2   500 1000 10000  0.91
-#&gt; 3: 3   500  750  1000  0.84
-#&gt; 4: 4   750  875  1000  0.96
-#&gt; 5: 5   750  813   875  0.87
-#&gt; 6: 6   813  844   875  0.87
-#&gt; 7: 7   844  860   875  0.89</code></pre>
-<p>This would indicate to us that the sample size is approximately 860.
+#&gt;    i lower   n upper power
+#&gt; 1: 1     1 500   800   0.6
+#&gt; 2: 2   500 600   800   0.3
+#&gt; 3: 3   600 700   800   1.0
+#&gt; 4: 4   600 650   700   0.9
+#&gt; 5: 5   600 625   650   0.7</code></pre>
+<p>This would indicate to us that the sample size is approximately 650.
 To verify, we might consider a more narrow range below and above this
 value, with a larger number of experiments and a small stopping
 threshold:</p>
-<pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = 500, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 870, n.min = 800, n.max = 1200, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = F)
+<pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = 10, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 650, n.min = 600, n.max = 700, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = F)
 
 n.lm$n
-#&gt; [1] 954
+#&gt; [1] 644
 n.lm$iterations
-#&gt;      i lower    n upper power
-#&gt;  1:  1   800  870  1200 0.888
-#&gt;  2:  2   870 1035  1200 0.932
-#&gt;  3:  3   870  953  1035 0.898
-#&gt;  4:  4   953  994  1035 0.948
-#&gt;  5:  5   953  974   994 0.928
-#&gt;  6:  6   953  964   974 0.908
-#&gt;  7:  7   953  959   964 0.922
-#&gt;  8:  8   953  956   959 0.942
-#&gt;  9:  9   953  955   956 0.936
-#&gt; 10: 10   953  954   955 0.910</code></pre>
+#&gt;    i lower   n upper power
+#&gt; 1: 1   600 650   700   0.9
+#&gt; 2: 2   600 625   650   0.7
+#&gt; 3: 3   625 638   650   0.7
+#&gt; 4: 4   638 644   650   0.9
+#&gt; 5: 5   638 641   644   0.8
+#&gt; 6: 6   641 643   644   0.8</code></pre>
 <div id="checking-for-viability" class="section level3">
 <h3>Checking for Viability</h3>
 <p>When the established maximum is not sufficiently large, the search
@@ -692,27 +683,27 @@ considered. If the previous example for linear regression had been
 restricted to a smaller range of sample sizes, then we would arrive at
 the following calculation:</p>
 <pre class="r"><code>n.lm = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = 700, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = T)
-#&gt; i = 1:  lower = 1, n = 500, upper = 700, estimated statistical power = 0.6340
-#&gt; i = 2:  lower = 500, n = 600, upper = 700, estimated statistical power = 0.7460
-#&gt; i = 3:  lower = 600, n = 650, upper = 700, estimated statistical power = 0.7860
-#&gt; i = 4:  lower = 650, n = 675, upper = 700, estimated statistical power = 0.8100
-#&gt; i = 5:  lower = 675, n = 688, upper = 700, estimated statistical power = 0.8020
-#&gt; i = 6:  lower = 688, n = 694, upper = 700, estimated statistical power = 0.8180
-#&gt; i = 7:  lower = 694, n = 697, upper = 700, estimated statistical power = 0.8200
+#&gt; i = 1:  lower = 1, n = 500, upper = 700, estimated statistical power = 0.6000
+#&gt; i = 2:  lower = 500, n = 600, upper = 700, estimated statistical power = 0.3000
+#&gt; i = 3:  lower = 600, n = 650, upper = 700, estimated statistical power = 0.9000
+#&gt; i = 4:  lower = 600, n = 625, upper = 650, estimated statistical power = 0.7000
+#&gt; i = 5:  lower = 625, n = 638, upper = 650, estimated statistical power = 0.7000
+#&gt; i = 6:  lower = 638, n = 644, upper = 650, estimated statistical power = 0.9000
+#&gt; i = 7:  lower = 638, n = 641, upper = 644, estimated statistical power = 0.8000
 
 n.lm$n
-#&gt; [1] 697
+#&gt; [1] 644
 n.lm$power
-#&gt; [1] 0.82
+#&gt; [1] 0.9
 n.lm$iterations
 #&gt;    i lower   n upper power
-#&gt; 1: 1     1 500   700 0.634
-#&gt; 2: 2   500 600   700 0.746
-#&gt; 3: 3   600 650   700 0.786
-#&gt; 4: 4   650 675   700 0.810
-#&gt; 5: 5   675 688   700 0.802
-#&gt; 6: 6   688 694   700 0.818
-#&gt; 7: 7   694 697   700 0.820</code></pre>
+#&gt; 1: 1     1 500   700   0.6
+#&gt; 2: 2   500 600   700   0.3
+#&gt; 3: 3   600 650   700   0.9
+#&gt; 4: 4   600 625   650   0.7
+#&gt; 5: 5   625 638   650   0.7
+#&gt; 6: 6   638 644   650   0.9
+#&gt; 7: 7   638 641   644   0.8</code></pre>
 <p>Therefore, it is important to double check the results to ensure the
 quality of the estimated sample size.</p>
 </div>

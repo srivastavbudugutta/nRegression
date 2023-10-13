@@ -69,6 +69,7 @@ The nRegression package was designed to estimate the minimal sample size require
 \examples{
 
 require(data.table)
+require(simitation)
 power = 0.9
 step.age <- "Age ~ N(45, 10)"
 step.female <- "Female ~ binary(0.53)"
@@ -90,15 +91,15 @@ conf.level = 0.95
 model.type = "logistic"
 seed = 41
 vstr = 3.6
-num.experiments = 200
+num.experiments = 10
 n.start = 200
 n.min = 1
-n.max = 3000
+n.max = 300
 increment = 100
 stop.threshold = 1
 n.logistic = nRegression(the.steps = the.steps, num.experiments = num.experiments,
- the.formula = the.formula.logistic, the.variable = the.variable, seed = seed,
-  n.start = n.start, n.min = n.min, n.max = n.max, increment = increment,
-   stop.threshold = stop.threshold, power = power, model.type = model.type,
-    verbose = TRUE)
+ the.formula = the.formula.logistic, the.variable = the.variable,
+ seed = seed, n.start = n.start, n.min = n.min, n.max = n.max,
+ increment = increment, stop.threshold = stop.threshold, power = power,
+ model.type = model.type, verbose = TRUE)
 }

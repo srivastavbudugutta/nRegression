@@ -1,0 +1,26 @@
+{
+    "id": "252C848C",
+    "path": "~/Columbia_University/Research Projects/R package/n regression/nRegression1/nRegression/tests/testthat/test-nRegression.R",
+    "project_path": "tests/testthat/test-nRegression.R",
+    "type": "r_source",
+    "hash": "2702854659",
+    "contents": "",
+    "dirty": false,
+    "created": 1690250944541.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "112,44",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1695510241,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1695510241755,
+    "read_only": false,
+    "read_only_alternatives": []
+}

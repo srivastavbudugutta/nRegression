@@ -39,11 +39,11 @@ conf.level = 0.95
 model.type = "logistic"
 seed = 41
 vstr = 3.6
-num.experiments = 200
+num.experiments = 10
 
 n.start = 200
 n.min = 1
-n.max = 3000
+n.max = 300
 increment = 100
 stop.threshold = 1
 
@@ -68,11 +68,11 @@ names(n.logistic$simstudy)
 ## -----------------------------------------------------------------------------
 the.formula.lm <- Weight ~ Age + Female + Health.Percentile + Exercise.Sessions + Healthy.Lifestyle
 model.type = "lm"
-num.experiments <- 500
+num.experiments <- 10
 
 n.start = 500
-n.max <- 10000
-increment = 500
+n.max <- 800
+increment = 100
 stop.threshold = 10
 
 the.variable = "Healthy.LifestyleTRUE"
@@ -86,12 +86,12 @@ n.lm$n
 n.lm$iterations
 
 ## -----------------------------------------------------------------------------
-n.lm = nRegression(the.steps = the.steps, num.experiments = 100, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = 50, power = power, model.type = model.type, verbose = F)
+n.lm = nRegression(the.steps = the.steps, num.experiments = 10, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = 50, power = power, model.type = model.type, verbose = F)
 
 n.lm$iterations
 
 ## -----------------------------------------------------------------------------
-n.lm = nRegression(the.steps = the.steps, num.experiments = 500, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 870, n.min = 800, n.max = 1200, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = F)
+n.lm = nRegression(the.steps = the.steps, num.experiments = 10, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = 650, n.min = 600, n.max = 700, increment = increment, stop.threshold = 1, power = power, model.type = model.type, verbose = F)
 
 n.lm$n
 n.lm$iterations
