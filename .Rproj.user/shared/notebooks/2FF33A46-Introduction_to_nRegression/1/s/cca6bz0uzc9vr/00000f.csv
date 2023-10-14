@@ -1,0 +1,24 @@
+"0","n.lm = nRegression(the.steps = the.steps, num.experiments = num.experiments, the.formula = the.formula.lm, the.variable = the.variable, seed = seed, n.start = n.start, n.max = n.max, increment = increment, stop.threshold = stop.threshold, power = power, model.type = model.type, verbose = TRUE)"
+"2","i = 1:  lower = 1, n = 500, upper = 10000, estimated statistical power = 0.6340
+"
+"2","i = 2:  lower = 500, n = 1000, upper = 10000, estimated statistical power = 0.9400
+"
+"2","i = 3:  lower = 500, n = 750, upper = 1000, estimated statistical power = 0.8560
+"
+"2","i = 4:  lower = 750, n = 875, upper = 1000, estimated statistical power = 0.9120
+"
+"2","i = 5:  lower = 750, n = 813, upper = 875, estimated statistical power = 0.8580
+"
+"2","i = 6:  lower = 813, n = 844, upper = 875, estimated statistical power = 0.8960
+"
+"2","i = 7:  lower = 844, n = 860, upper = 875, estimated statistical power = 0.9040
+"
+"2","i = 8:  lower = 844, n = 852, upper = 860, estimated statistical power = 0.8900
+"
+"2","i = 9:  lower = 852, n = 856, upper = 860, estimated statistical power = 0.8840
+"
+"0","n.lm$n"
+"1","[1]"
+"1"," 860"
+"1","
+"

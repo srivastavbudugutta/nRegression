@@ -1,0 +1,162 @@
+#' @title nRegression
+#' @description The nRegression package was designed to estimate the minimal sample size required to attain a specific statistical power in the context of linear regression and logistic regression models through simulations.
+#' @param the.steps The steps are ordered to describe which variables will be calculated. Note that the variables with a dependence on other variables must be specified after all of its inputs.
+#' @param num.experiments The number of experiments to perform at each sample size to estimate the power.
+#' @param model.type The type of regression model to fit.By default it is linear regression
+#' @param the.formula The formula for the regression model to fit.
+#' @param the.variable the variable to test
+#' @param seed This parameter is used to set a specific random seed, ensuring that the results are reproducible if the same seed is used.
+#' @param n.start The initial sample size to start the simulations. By default it is 50.
+#' @param n.min The minimum possible sample size. By default it is 1
+#' @param n.max The maximum possible sample size. By default it is 10000
+#' @param increment The increment to increase the sample size at each iteration. By default it is 50.
+#' @param stop.threshold The number of iterations to stop after if the desired power is not achieved.
+#' @param power describes the statistical power
+#' @param conf.level The confidence level for the statistical power.
+#' @param verbose Logical. If TRUE, the function will print information about each iteration.
+#' @param vstr Variance inflation factor. Used in the simulation of the response variable.
+#' @return A list containing the following elements:
+#'   \itemize{
+#'      \item{'min.sample.size': The estimated minimum sample size to achieve the desired power.}
+#'      \item{'power': The statistical power achieved with the estimated sample size.}
+#'      \item{'iterations': A data frame with details about each iteration of the simulation. Each row
+#'      represents an iteration and contains the sample size, the estimated power, and the upper and lower
+#'      bounds for the sample size for that iteration.}
+#'  }
+#' @import data.table
+#' @import covr
+#' @import stats
+#' @import simitation
+#'
+#'
+#' @examples
+#'
+#' require(data.table)
+#' require(simitation)
+#' power = 0.9
+#' step.age <- "Age ~ N(45, 10)"
+#' step.female <- "Female ~ binary(0.53)"
+#' step.health.percentile <- "Health.Percentile ~ U(0,100)"
+#' step.exercise.sessions <- "Exercise.Sessions ~ Poisson(2)"
+#' step.diet <- "Diet ~ sample(('Light', 'Moderate', 'Heavy'), (0.2, 0.45, 0.35))"
+#' step.healthy.lifestyle <- "Healthy.Lifestyle ~ logistic(log(0.45) - 0.1 *
+#' (Age -45) + 0.05 * Female + 0.01 * Health.Percentile + 0.5 *
+#' Exercise.Sessions - 0.1 * (Diet == 'Moderate') - 0.4 * (Diet == 'Heavy'))"
+#' step.weight <- "Weight ~ lm(150 - 15 * Female + 0.5 * Age - 0.1 *
+#' Health.Percentile - 0.2 * Exercise.Sessions  + 5 * (Diet == 'Moderate') + 15 *
+#' (Diet == 'Heavy') - 2 * Healthy.Lifestyle + N(0, 10))"
+#' the.steps <- c(step.age, step.female, step.health.percentile, step.exercise.sessions,
+#'  step.diet, step.healthy.lifestyle, step.weight)
+#' the.formula.logistic <- Healthy.Lifestyle ~ Age + Female + Health.Percentile +
+#'  Exercise.Sessions + Weight
+#' the.variable = "Exercise.Sessions"
+#' conf.level = 0.95
+#' model.type = "logistic"
+#' seed = 41
+#' vstr = 3.6
+#' num.experiments = 10
+#' n.start = 200
+#' n.min = 1
+#' n.max = 300
+#' increment = 100
+#' stop.threshold = 1
+#' n.logistic = nRegression(the.steps = the.steps, num.experiments = num.experiments,
+#'  the.formula = the.formula.logistic, the.variable = the.variable,
+#'  seed = seed, n.start = n.start, n.min = n.min, n.max = n.max,
+#'  increment = increment, stop.threshold = stop.threshold, power = power,
+#'  model.type = model.type, verbose = TRUE)
+#' @export
+#'
+
+nRegression <- function(the.steps, num.experiments, model.type = "lm", the.formula, the.variable, seed, n.start = 50, n.min = 1, n.max = 10000, increment = 50, stop.threshold = 5, power = 0.8, conf.level = 0.95, verbose = TRUE, vstr = 3.6){
+
+  requireNamespace("data.table")
+
+  value.lm <- "lm"
+
+  if(!(model.type %in% c("logistic", "glm"))){
+    model.type <- value.lm
+  }
+
+  lower <- n.min
+  upper <- n.max
+  n <- n.start
+
+  i = 1
+
+  iterations <- list()
+  the.studies <- list()
+
+
+  while(lower < upper - stop.threshold){
+
+    if(model.type == value.lm){
+      the.studies[[i]] <- simstudy.lm(the.steps = the.steps, n = n, num.experiments = num.experiments, the.formula = the.formula, conf.level = conf.level, seed = seed, vstr = vstr)
+
+      calculated.power <- the.studies[[i]]$sim.analysis$lm.p.summary[Coefficient == the.variable, reject.proportion]
+    }
+    if(model.type != value.lm){
+      the.studies[[i]] <- simstudy.logistic(the.steps = the.steps, n = n, num.experiments = num.experiments, the.formula = the.formula, conf.level = conf.level, seed = seed, vstr = vstr)
+
+      calculated.power <- the.studies[[i]]$sim.analysis$logistic.p.summary[Coefficient == the.variable, reject.proportion]
+    }
+
+    iterations[[i]] <- data.table(i = i, lower = lower, n = n, upper = upper, power = calculated.power)
+
+    if(verbose == TRUE){
+      message(sprintf("i = %d:  lower = %d, n = %d, upper = %d, estimated statistical power = %.4f", i, lower, n, upper, calculated.power))
+    }
+
+    if(calculated.power < power){
+      lower <- n
+    }
+    if(calculated.power >= power){
+      upper <- n
+    }
+    n <- min(n + increment, ceiling(mean(c(upper, lower))))
+    i <- i + 1
+  }
+
+  n.considered <- unlist(lapply(X = iterations, FUN = function(x){return(x$n)}))
+
+  if(!(n %in% n.considered)){
+    if(model.type == value.lm){
+      the.studies[[i]] <- simstudy.lm(the.steps = the.steps, n = n, num.experiments = num.experiments, the.formula = the.formula, conf.level = conf.level, seed = seed, vstr = vstr)
+
+      calculated.power <- the.studies[[i]]$sim.analysis$lm.p.summary[Coefficient == the.variable, reject.proportion]
+    }
+    if(model.type != value.lm){
+      the.studies[[i]] <- simstudy.logistic(the.steps = the.steps, n = n, num.experiments = num.experiments, the.formula = the.formula, conf.level = conf.level, seed = seed, vstr = vstr)
+
+      calculated.power <- the.studies[[i]]$sim.analysis$logistic.p.summary[Coefficient == the.variable, reject.proportion]
+    }
+    iterations[[i]] <- data.table(i = i, lower = lower, n = n, upper = upper, power = calculated.power)
+  }
+
+  if(verbose == TRUE & !(n %in% n.considered)){
+    message(sprintf("i = %d:  lower = %d, n = %d, upper = %d, estimated statistical power = %.4f", i, lower, n, upper, calculated.power))
+  }
+
+
+  specified.power <- power
+  iterations <- rbindlist(l = iterations)
+  number.exceeding <- iterations[get("power") >= specified.power, .N]
+
+  if(number.exceeding > 0){
+    qualifying.iterations <- iterations[get("power") >= specified.power,]
+    v <- qualifying.iterations[, which(n == min(n))][1]
+    the.sample.size <- qualifying.iterations[v, n]
+    the.power <- qualifying.iterations[v, power]
+
+  }
+  if(number.exceeding == 0){
+    v <- iterations[, which(power == max(power))]
+    the.sample.size <- iterations[v, n]
+    the.power <- iterations[v, power]
+  }
+
+  u <- iterations[, which(n == the.sample.size)][1]
+  simstudy <- the.studies[[u]]
+
+  return(list(n = the.sample.size, power = the.power, iterations = iterations, simstudy = simstudy))
+}
